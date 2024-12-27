@@ -1,0 +1,74 @@
+CREATE DATABASE UserRegistration;
+
+USE UserRegistration;
+
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    first_name VARCHAR(50),
+    last_name VARCHAR(50),
+    mobile VARCHAR(15) UNIQUE,
+    password_hash VARCHAR(255),
+    created_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_by VARCHAR(50),
+    updated_date DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    updated_by VARCHAR(50)
+);
+
+
+
+
+
+
+DELIMITER //
+
+CREATE PROCEDURE CreateUser(
+    IN p_first_name VARCHAR(50),
+    IN p_last_name VARCHAR(50),
+    IN p_mobile VARCHAR(15),
+    IN p_password_hash VARCHAR(255),
+    IN p_created_by VARCHAR(50)
+)
+BEGIN
+    INSERT INTO users (first_name, last_name, mobile, password_hash, created_by) 
+    VALUES (p_first_name, p_last_name, p_mobile, p_password_hash, p_created_by);
+
+END //
+
+
+
+CREATE PROCEDURE GetUser(IN p_mobile VARCHAR(15))
+BEGIN
+    SELECT * FROM users WHERE mobile = p_mobile;
+
+END //
+
+
+
+CREATE PROCEDURE UpdateUser(
+    IN p_mobile VARCHAR(15),
+    IN p_first_name VARCHAR(50),
+    IN p_last_name VARCHAR(50),
+    IN p_password_hash VARCHAR(255),
+    IN p_updated_by VARCHAR(50)
+)
+BEGIN
+    UPDATE users
+    SET first_name = p_first_name, 
+        last_name = p_last_name, 
+        password_hash = p_password_hash,
+        updated_by = p_updated_by
+    WHERE mobile = p_mobile;
+
+END //
+
+
+
+
+CREATE PROCEDURE DeleteUser(IN p_mobile VARCHAR(15))
+BEGIN
+    DELETE FROM users WHERE mobile = p_mobile;
+
+
+END //
+
+DELIMITER ;
